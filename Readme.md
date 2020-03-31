@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юрий](https://up.htmlacademy.ru/ecmascript/11/user/950271).
-* Наставник: `Неизвестно`.
+* Наставник: [Василиса Медведенко](https://htmlacademy.ru/profile/id1268845).
 
 ---
 
