@@ -2,6 +2,7 @@
 
 const FILM_COUNT = 5;
 const EXTRA_FILM_COUNT = 2;
+const EXTRA_FILM_LIST = 2;
 
 const createProfileRatingTemplate = () => {
   return (
@@ -292,15 +293,17 @@ render(filmsListElement, createShowMoreButtonTemplate());
 
 const filmsElement = mainElement.querySelector(`.films`);
 
-for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+for (let i = 0; i < EXTRA_FILM_LIST; i++) {
   render(filmsElement, createFilmsListExtraContainerTemplate());
 }
 
 const filmsListExtraElements = mainElement.querySelectorAll(`.films-list__container`);
 
-for (let i = 1; i < filmsListExtraElements.length; i++) {
-  render(filmsListExtraElements[i], createFilmCardTemplate());
-  render(filmsListExtraElements[i], createFilmCardTemplate());
+const [, filmsTopRatedElement, filmsMostCommentedElement] = filmsListExtraElements;
+
+for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+  render(filmsTopRatedElement, createFilmCardTemplate());
+  render(filmsMostCommentedElement, createFilmCardTemplate());
 }
 
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
