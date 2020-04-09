@@ -6,19 +6,16 @@ import {createFilmCardTemplate} from "./components/film-card.js";
 import {createShowMoreButtonTemplate} from "./components/show-more-button.js";
 import {createFilmsListExtraContainerTemplate} from "./components/films-list-extra-container.js";
 import {createFooterStatisticsTemplate} from "./components/footer-statistics.js";
+import {createFilmDetailsTemplate} from "./components/film-details.js";
 import {generateFilms} from "./mock/film.js";
 import {getRandomInteger} from "./utils.js";
 import {profileRating} from "./mock/profile-rating.js";
+import {EXTRA_FILM_CONTAINERS} from "./const.js";
 
 const FILM_COUNT = 20;
 const EXTRA_FILM_COUNT = 2;
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
-
-const EXTRA_FILM_CONTAINERS = [
-  `Top rated movies`,
-  `Most commented`,
-];
 
 const films = generateFilms(FILM_COUNT);
 
@@ -75,15 +72,20 @@ for (const containerName of EXTRA_FILM_CONTAINERS) {
 
 const [filmsTopRatedElement, filmsMostCommentedElement] = mainElement.querySelectorAll(`.films-list--extra > .films-list__container`);
 
+const topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
+const mostCommentedFilms = films.slice().sort((a, b) => b.comments.length - a.comments.length);
+
 for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-  render(filmsTopRatedElement, createFilmCardTemplate(films
-    .slice()
-    .sort((a, b) => b.rating - a.rating)[i]));
-  render(filmsMostCommentedElement, createFilmCardTemplate(films
-    .slice()
-    .sort((a, b) => b.numberOfComments - a.numberOfComments)[i]));
+  render(filmsTopRatedElement, createFilmCardTemplate(topRatedFilms[i]));
+  render(filmsMostCommentedElement, createFilmCardTemplate(mostCommentedFilms[i]));
 }
 
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
 render(footerStatisticsElement, createFooterStatisticsTemplate(films.length));
+
+const bodyElement = document.querySelector(`body`);
+
+render(bodyElement, createFilmDetailsTemplate(films[0]));
+document.querySelector(`.film-details`).style.display = `none`;
+// временно попап скрыт
