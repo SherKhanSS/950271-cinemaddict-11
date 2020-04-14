@@ -1,9 +1,49 @@
-import {createFilmDetailsCommentTemplate} from "./film-details-comment.js";
 import {MONTH_NAMES} from "../const.js";
+import {createElement} from "../utils.js";
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsCommentTemplate = (comment) => {
+
+  const {emoji, text, author, date} = comment;
+
+  const fullDate = `${new Date(date).getDate()}/${new Date(date).getMonth()}/${new Date(date).getFullYear()}
+    ${new Date(date).getHours()}:${new Date(date).getMinutes()}`;
+
+  return (
+    `<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${text}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${author}</span>
+          <span class="film-details__comment-day">
+            ${fullDate}
+          </span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`
+  );
+};
+
+const createFilmDetailsGenreTemplate = (genre) => {
+
+  return (
+    `<span class="film-details__genre">${genre}</span>`
+  );
+};
+
+const createFilmDetailsTemplate = (film) => {
 
   const {title, rating, year, duration, genres, poster, description, comments, ratingAge, oririnalTitle, director, writers, actors, country} = film;
+
+  const fullDate = `${new Date(year).getDate()}
+    ${MONTH_NAMES[new Date(year).getMonth()]}
+    ${new Date(year).getFullYear()}`;
+  const genresList = genres.map((genre) => createFilmDetailsGenreTemplate(genre)).join(``);
+  const commentsCount = comments.length;
+  const commentsList = comments.map((comment) => createFilmDetailsCommentTemplate(comment)).join(``);
 
   return (
     `<section class="film-details">
@@ -47,9 +87,7 @@ export const createFilmDetailsTemplate = (film) => {
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
                   <td class="film-details__cell">
-                    ${new Date(year).getDate()}
-                    ${MONTH_NAMES[new Date(year).getMonth()]}
-                    ${new Date(year).getFullYear()}</td>
+                    ${fullDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -62,7 +100,7 @@ export const createFilmDetailsTemplate = (film) => {
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
                   <td class="film-details__cell">
-                    ${genres.map((it) => `<span class="film-details__genre">${it}</span>`).join(``)}
+                    ${genresList}
                   </td>
                 </tr>
               </table>
@@ -87,10 +125,10 @@ export const createFilmDetailsTemplate = (film) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
             <ul class="film-details__comments-list">
-              ${comments.map((it) => createFilmDetailsCommentTemplate(it)).join(``)}
+              ${commentsList}
             </ul>
 
             <div class="film-details__new-comment">
@@ -128,3 +166,26 @@ export const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
+
+export class FilmDetailsComponent {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

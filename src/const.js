@@ -1,4 +1,4 @@
-export const MONTH_NAMES = [
+const MONTH_NAMES = [
   `January`,
   `February`,
   `March`,
@@ -13,7 +13,15 @@ export const MONTH_NAMES = [
   `December`,
 ];
 
-export const EXTRA_FILM_CONTAINERS = [
+const EXTRA_FILM_CONTAINERS = [
   `Top rated movies`,
   `Most commented`,
 ];
+
+const PROFILE_RATING = [
+  `Novice`,
+  `Fan`,
+  `Movie Buff`,
+];
+
+export {MONTH_NAMES, EXTRA_FILM_CONTAINERS, PROFILE_RATING};
