@@ -1,7 +1,8 @@
 import {getRandomInteger, getRandomItem, getRandomItems} from "../utils.js";
+import {PROFILE_RATING} from "../const.js";
 
 const RATING_MIN = 0;
-const RATING_MAX = 9;
+const RATING_MAX = 100;
 const HOUR_MIN = 0;
 const HOUR_MAX = 3;
 const MINUTE_MIN = 0;
@@ -12,6 +13,7 @@ const RATING_AGE_MIN = 0;
 const RATING_AGE_MAX = 18;
 const DATE_MIN = new Date(1895, 2, 22, 12, 30); // первый фильмец в истории кино ^.^
 const DATE_MAX = new Date();
+const FILM_COUNT = 20;
 
 const TITLES = [
   `Avatar`,
@@ -102,7 +104,7 @@ const generateComment = () => {
 const generateFilm = () => {
   return {
     title: getRandomItem(TITLES),
-    rating: `${getRandomInteger(RATING_MIN, RATING_MAX)}.${getRandomInteger(RATING_MIN, RATING_MAX)}`,
+    rating: getRandomInteger(RATING_MIN, RATING_MAX) / 10,
     year: getRandomInteger(DATE_MIN.getTime(), DATE_MAX.getTime()),
     duration: `${getRandomInteger(HOUR_MIN, HOUR_MAX)}h ${getRandomInteger(MINUTE_MIN, MINUTE_MAX)}m`,
     genres: getRandomItems(GENRES),
@@ -124,4 +126,14 @@ const generateFilms = (count) => {
     .map(generateFilm);
 };
 
-export {generateFilms};
+const films = generateFilms(FILM_COUNT);
+
+const navigationCount = [
+  getRandomInteger(0, films.length),
+  getRandomInteger(0, films.length),
+  getRandomInteger(0, films.length),
+];
+
+const profileRating = getRandomItem(PROFILE_RATING);
+
+export {films, navigationCount, profileRating};
