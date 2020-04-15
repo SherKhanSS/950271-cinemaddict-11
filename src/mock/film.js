@@ -3,7 +3,7 @@ import {PROFILE_RATING} from "../const.js";
 
 const RATING_MIN = 0;
 const RATING_MAX = 100;
-const HOUR_MIN = 0;
+const HOUR_MIN = 1;
 const HOUR_MAX = 3;
 const MINUTE_MIN = 0;
 const MINUTE_MAX = 59;

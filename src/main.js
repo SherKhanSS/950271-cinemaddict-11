@@ -7,6 +7,7 @@ import {ShowMoreButtonComponent} from "./components/show-more-button.js";
 import {FilmsListExtraContainerComponent} from "./components/films-list-extra-container.js";
 import {FooterStatisticsComponent} from "./components/footer-statistics.js";
 import {FilmDetailsComponent} from "./components/film-details.js";
+import {NoDataComponent} from "./components/no-data.js";
 import {films, navigationCount, profileRating} from "./mock/film.js";
 import {EXTRA_FILM_CONTAINERS} from "./const.js";
 import {render} from "./utils.js";
@@ -37,9 +38,10 @@ const renderFilm = (filmsListElement, film) => {
   const filmCardComponent = new FilmCardComponent(film);
 
   filmCardComponent.getElement().addEventListener(`click`, (evt) => {
-    if (evt.target.classList.contains(`film-card__poster`)
-      || evt.target.classList.contains(`film-card__title`)
-      || evt.target.classList.contains(`film-card__comments`)) {
+    const target = evt.target.classList;
+    if (target.contains(`film-card__poster`)
+      || target.contains(`film-card__title`)
+      || target.contains(`film-card__comments`)) {
       evt.preventDefault();
       showFilmDetails();
       document.addEventListener(`keydown`, onEscKeyDown);
@@ -65,48 +67,58 @@ const mainElement = document.querySelector(`.main`);
 
 render(mainElement, new MainNavigationComponent(navigationCount).getElement());
 render(mainElement, new SortComponent().getElement());
-render(mainElement, new ContentContainerComponent().getElement());
 
-const filmsListContainerElement = mainElement.querySelector(`.films-list__container`);
+const renderFilms = () => {
+  if (films.length === 0) {
+    render(mainElement, new NoDataComponent().getElement());
+    return;
+  }
 
-let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+  render(mainElement, new ContentContainerComponent().getElement());
 
-films.slice(0, showingFilmsCount)
-  .forEach((film) => renderFilm(filmsListContainerElement, film));
+  const filmsListContainerElement = mainElement.querySelector(`.films-list__container`);
 
-const filmsListElement = mainElement.querySelector(`.films-list`);
+  let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
 
-render(filmsListElement, new ShowMoreButtonComponent().getElement());
-
-const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
-
-showMoreButton.addEventListener(`click`, () => {
-  const prevTasksCount = showingFilmsCount;
-  showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
-
-  films.slice(prevTasksCount, showingFilmsCount)
+  films.slice(0, showingFilmsCount)
     .forEach((film) => renderFilm(filmsListContainerElement, film));
 
-  if (showingFilmsCount >= films.length) {
-    showMoreButton.remove();
+  const filmsListElement = mainElement.querySelector(`.films-list`);
+
+  render(filmsListElement, new ShowMoreButtonComponent().getElement());
+
+  const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
+
+  showMoreButton.addEventListener(`click`, () => {
+    const prevTasksCount = showingFilmsCount;
+    showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+    films.slice(prevTasksCount, showingFilmsCount)
+      .forEach((film) => renderFilm(filmsListContainerElement, film));
+
+    if (showingFilmsCount >= films.length) {
+      showMoreButton.remove();
+    }
+  });
+
+  const filmsElement = mainElement.querySelector(`.films`);
+
+  for (const containerName of EXTRA_FILM_CONTAINERS) {
+    render(filmsElement, new FilmsListExtraContainerComponent(containerName).getElement());
   }
-});
 
-const filmsElement = mainElement.querySelector(`.films`);
+  const [filmsTopRatedElement, filmsMostCommentedElement] = mainElement.querySelectorAll(`.films-list--extra > .films-list__container`);
 
-for (const containerName of EXTRA_FILM_CONTAINERS) {
-  render(filmsElement, new FilmsListExtraContainerComponent(containerName).getElement());
-}
+  const topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
+  const mostCommentedFilms = films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
-const [filmsTopRatedElement, filmsMostCommentedElement] = mainElement.querySelectorAll(`.films-list--extra > .films-list__container`);
+  for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+    renderFilm(filmsTopRatedElement, topRatedFilms[i]);
+    renderFilm(filmsMostCommentedElement, mostCommentedFilms[i]);
+  }
+};
 
-const topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-const mostCommentedFilms = films.slice().sort((a, b) => b.comments.length - a.comments.length);
-
-for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-  renderFilm(filmsTopRatedElement, topRatedFilms[i]);
-  renderFilm(filmsMostCommentedElement, mostCommentedFilms[i]);
-}
+renderFilms();
 
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
