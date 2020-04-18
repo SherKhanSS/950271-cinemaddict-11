@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomItem, getRandomItems} from "../utils.js";
+import {getRandomInteger, getRandomItem, getRandomItems} from "../utils/common.js";
 import {PROFILE_RATING} from "../const.js";
 
 const RATING_MIN = 0;

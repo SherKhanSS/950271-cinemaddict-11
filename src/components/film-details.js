@@ -1,5 +1,5 @@
+import {AbstractComponent} from "./abstract-component.js";
 import {MONTH_NAMES} from "../const.js";
-import {createElement} from "../utils.js";
 
 const createFilmDetailsCommentTemplate = (comment) => {
 
@@ -167,25 +167,13 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export class FilmDetailsComponent {
+export class FilmDetailsComponent extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

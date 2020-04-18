@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {AbstractComponent} from "./abstract-component.js";
 
 const createFilmCardTemplate = (film) => {
 
@@ -29,25 +29,13 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export class FilmCardComponent {
+export class FilmCardComponent extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

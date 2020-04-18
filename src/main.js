@@ -10,7 +10,7 @@ import {FilmDetailsComponent} from "./components/film-details.js";
 import {NoDataComponent} from "./components/no-data.js";
 import {films, navigationCount, profileRating} from "./mock/film.js";
 import {EXTRA_FILM_CONTAINERS} from "./const.js";
-import {render} from "./utils.js";
+import {render} from "./utils/common.js";
 
 const EXTRA_FILM_COUNT = 2;
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -38,10 +38,10 @@ const renderFilm = (filmsListElement, film) => {
   const filmCardComponent = new FilmCardComponent(film);
 
   filmCardComponent.getElement().addEventListener(`click`, (evt) => {
-    const target = evt.target.classList;
-    if (target.contains(`film-card__poster`)
-      || target.contains(`film-card__title`)
-      || target.contains(`film-card__comments`)) {
+    const targetClass = evt.target.classList;
+    if (targetClass.contains(`film-card__poster`)
+      || targetClass.contains(`film-card__title`)
+      || targetClass.contains(`film-card__comments`)) {
       evt.preventDefault();
       showFilmDetails();
       document.addEventListener(`keydown`, onEscKeyDown);
@@ -91,7 +91,7 @@ const renderFilms = () => {
 
   showMoreButton.addEventListener(`click`, () => {
     const prevTasksCount = showingFilmsCount;
-    showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+    showingFilmsCount += SHOWING_FILMS_COUNT_BY_BUTTON;
 
     films.slice(prevTasksCount, showingFilmsCount)
       .forEach((film) => renderFilm(filmsListContainerElement, film));
