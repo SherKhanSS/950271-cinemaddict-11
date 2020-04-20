@@ -31,23 +31,23 @@ export class SortComponent extends AbstractComponent {
     return this._currenSortType;
   }
 
+  setSortType(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
+    const sortType = evt.target.dataset.sortType;
+
+    if (this._currenSortType === sortType) {
+      return;
+    }
+
+    this._currenSortType = sortType;
+  }
+
   setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-
-      if (evt.target.tagName !== `A`) {
-        return;
-      }
-
-      const sortType = evt.target.dataset.sortType;
-
-      if (this._currenSortType === sortType) {
-        return;
-      }
-
-      this._currenSortType = sortType;
-
-      handler(this._currenSortType);
-    });
+    this.getElement().addEventListener(`click`, handler(this.setSortType()));
   }
 }
